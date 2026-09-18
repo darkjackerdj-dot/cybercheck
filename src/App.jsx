@@ -920,10 +920,11 @@ const sevenDayPlan = [
       <main className="app">
         <nav className="navbar">
           <div className="brand">
-            <div className="brand-icon">
-              <ShieldCheck size={21} />
-            </div>
-            <span>CYBERCHECK</span>
+            <img
+            src="/cybercheck-logo.png"
+            alt="CYBERCHECK"
+           className="brand-logo"
+          />
           </div>
 
           <div className="nav-status">
@@ -1192,10 +1193,11 @@ const sevenDayPlan = [
       <main className="app">
         <nav className="navbar">
           <div className="brand">
-            <div className="brand-icon">
-              <ShieldCheck size={21} />
-            </div>
-            <span>CYBERCHECK</span>
+           <img
+            src="/cybercheck-logo.png"
+            alt="CYBERCHECK"
+            className="brand-logo"
+            />
           </div>
 
           <div className="nav-status">
@@ -1282,10 +1284,11 @@ const sevenDayPlan = [
     <main className="app">
       <nav className="navbar">
         <div className="brand">
-          <div className="brand-icon">
-            <ShieldCheck size={21} />
-          </div>
-          <span>CYBERCHECK</span>
+         <img
+        src="/cybercheck-logo.png"
+        alt="CYBERCHECK"
+        className="brand-logo"
+        />
         </div>
 
         <div className="nav-status">
