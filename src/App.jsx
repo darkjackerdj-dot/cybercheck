@@ -165,6 +165,9 @@ const questions = [
 
 function App() {
   const [started, setStarted] = useState(false);
+  const [showLicense, setShowLicense] = useState(false);
+  const [licenseCode, setLicenseCode] = useState("");
+  const [licenseLoading, setLicenseLoading] = useState(false);
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(false);
@@ -172,7 +175,39 @@ function App() {
   const [completedDays, setCompletedDays] = useState([]);
 
   const question = questions[current];
+  async function verifyLicense() {
+    const code = licenseCode.trim();
 
+    if (!code) {
+      alert("Please enter your license code.");
+      return;
+    }
+
+    setLicenseLoading(true);
+
+    try {
+      const response = await fetch("/api/verify-license", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
+      });
+
+      const data = await response.json();
+
+      if (data.valid) {
+        setShowLicense(false);
+        setStarted(true);
+      } else {
+        alert(data.message || "Invalid license code.");
+      }
+    } catch {
+      alert("Unable to verify license. Please try again.");
+    } finally {
+      setLicenseLoading(false);
+    }
+  }
   function chooseAnswer(id, risk) {
     setAnswers((prev) => ({
       ...prev,
@@ -1185,7 +1220,78 @@ const sevenDayPlan = [
       </main>
     );
   }
+ if (showLicense && !started) {
+  return (
+    <main className="app">
+      <nav className="navbar">
+        <div className="brand">
+          <img
+            src="/cybercheck-logo.png"
+            alt="CYBERCHECK"
+            className="brand-logo"
+          />
+        </div>
 
+        <div className="nav-status">
+          <span className="status-dot"></span>
+          Privacy-first
+        </div>
+      </nav>
+
+      <section className="hero">
+        <div className="hero-content">
+          <div className="eyebrow">
+            <LockKeyhole size={15} />
+            LICENSE ACTIVATION
+          </div>
+
+          <h1>
+            Unlock your
+            <br />
+            <span>security checkup.</span>
+          </h1>
+
+          <p className="hero-text">
+            Enter the CYBERCHECK license code you received after your
+            purchase to activate your security checkup.
+          </p>
+
+          <div className="hero-actions">
+            <input
+              type="text"
+              value={licenseCode}
+              onChange={(e) => setLicenseCode(e.target.value)}
+              placeholder="Enter your license code"
+              className="license-input"
+              autoComplete="off"
+            />
+
+            <button
+              className="primary-btn"
+              onClick={verifyLicense}
+              disabled={licenseLoading}
+            >
+              {licenseLoading ? "Verifying..." : "Verify License"}
+              {!licenseLoading && <ArrowRight size={18} />}
+            </button>
+          </div>
+
+          <div className="trust-row">
+            <LockKeyhole size={15} />
+            <span>Your license code is verified securely.</span>
+          </div>
+
+          <button
+            className="back-link"
+            onClick={() => setShowLicense(false)}
+          >
+            ← Back to CYBERCHECK
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+}
   if (started) {
     const selected = answers[current];
 
@@ -1318,7 +1424,7 @@ const sevenDayPlan = [
           <div className="hero-actions">
             <button
               className="primary-btn"
-              onClick={() => setStarted(true)}
+              onClick={() => setShowLicense(true)}
             >
               Start Free Checkup
               <ArrowRight size={18} />
